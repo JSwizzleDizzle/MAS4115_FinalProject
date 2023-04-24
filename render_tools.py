@@ -229,7 +229,7 @@ class ShaderProgram:
 
 
     def setUniformMat4f(self, name: str, mat4):
-        glUniformMatrix4fv(glGetUniformLocation(self.__id, name), 1, GL_FALSE, np.array(mat4.to_list()).T)
+        glUniformMatrix4fv(glGetUniformLocation(self.__id, name), 1, GL_FALSE, np.array(mat4.to_list()))
 
 
 

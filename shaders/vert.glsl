@@ -19,7 +19,7 @@ uniform mat4 uMVP = mat4(1.0);
 
 void main()
 {
-    fColor = vec4(0.5 * osPosition + 0.5, 1.0);
+    fColor = vec4(0.5 * osPosition + 0.5, 1.0);   // abs(vec4(vec3(uMVP[3]), 1));
 
     wsPosition = vec3(uModel * vec4(osPosition, 1.0));
     wsNormal = vec3(uNormalModel * vec4(osNormal, 0.0));

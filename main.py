@@ -36,14 +36,14 @@ if __name__ == "__main__":
 
     # ---------------- OBJECT SETUP ---------------- #
     # Creates object geometry and buffers
-    plane = rnd.RenderData(rnd.GeometryData.plane())
+    plane = rnd.RenderData(rnd.GeometryData.cube())
 
     # Matrices
-    transform = rnd.Transform(glm.vec3(0, 0, 0), glm.radians(0), glm.vec3(0, 0, 1), glm.vec3(0.5))
-    view = glm.lookAt(glm.vec3(0, 0, 5), glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
+    transform = rnd.Transform(glm.vec3(0, 0, -5), glm.radians(0), glm.vec3(0, 0, 1), glm.vec3(1))
+    view = glm.lookAt(glm.vec3(4, 4, 4), glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
     projection = glm.perspective(45, WINDOW_WIDTH / WINDOW_HEIGHT, 0.1, 100)
     mvp = projection * view * transform.model_matrix()
-    print(mvp)
+    print(view)
 
     # Create and use shader program (see render_tools.py)
     program = rnd.ShaderProgram("vert.glsl", "frag.glsl")
@@ -63,22 +63,21 @@ if __name__ == "__main__":
 
         transform.angle = 2 * glfw.get_time()
         transform.calc_matrix()
-        theta = 0.3 * glfw.get_time()
-        rad = 5
+        theta = 0.4 * glfw.get_time()
+        rad = 4
 
-        view = glm.lookAt(glm.vec3(rad * glm.sin(theta), 0, rad * glm.cos(theta)), glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
+        #view = glm.lookAt(glm.vec3(rad * glm.sin(theta), 0, rad * glm.cos(theta)), glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
         mvp = projection * view * transform.model_matrix()
         
         program.setUniformMat4f("uModel", transform.model_matrix())
         program.setUniformMat4f("uNormalModel", transform.normal_model_matrix())
         program.setUniformMat4f("uView", view)
-        #program.setUniformMat4f("uProjection", projection)
+        program.setUniformMat4f("uProjection", projection)
         program.setUniformMat4f("uMVP", mvp)
 
         glBindVertexArray(plane.vao())
         glDrawElements(GL_TRIANGLES, plane.index_count(), GL_UNSIGNED_INT, ctypes.c_void_p(0))
         glBindVertexArray(0)
-
 
         glfw.swap_buffers(window)
 
