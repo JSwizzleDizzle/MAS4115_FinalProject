@@ -13,6 +13,8 @@ def window_size_cbfun(window, width: int, height: int):
 WINDOW_WIDTH = 960
 WINDOW_HEIGHT = 960
 
+
+
 if __name__ == "__main__":
 
     # ---------------- WINDOW/CONTEXT SETUP ---------------- #
@@ -37,10 +39,11 @@ if __name__ == "__main__":
     plane = rnd.RenderData(rnd.GeometryData.plane())
 
     # Matrices
-    transform = rnd.Transform(glm.vec3(0, 0, -5), glm.radians(0), glm.vec3(0, 0, 1), glm.vec3(1, 1, 1))
+    transform = rnd.Transform(glm.vec3(0, 0, 0), glm.radians(0), glm.vec3(0, 0, 1), glm.vec3(0.5))
     view = glm.lookAt(glm.vec3(0, 0, 5), glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
     projection = glm.perspective(45, WINDOW_WIDTH / WINDOW_HEIGHT, 0.1, 100)
-    print(view)
+    mvp = projection * view * transform.model_matrix()
+    print(mvp)
 
     # Create and use shader program (see render_tools.py)
     program = rnd.ShaderProgram("vert.glsl", "frag.glsl")
@@ -58,13 +61,19 @@ if __name__ == "__main__":
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-        transform.angle = glfw.get_time()
+        transform.angle = 2 * glfw.get_time()
         transform.calc_matrix()
+        theta = 0.3 * glfw.get_time()
+        rad = 5
+
+        view = glm.lookAt(glm.vec3(rad * glm.sin(theta), 0, rad * glm.cos(theta)), glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
+        mvp = projection * view * transform.model_matrix()
         
         program.setUniformMat4f("uModel", transform.model_matrix())
         program.setUniformMat4f("uNormalModel", transform.normal_model_matrix())
-        #program.setUniformMat4f("uView", view)
+        program.setUniformMat4f("uView", view)
         #program.setUniformMat4f("uProjection", projection)
+        program.setUniformMat4f("uMVP", mvp)
 
         glBindVertexArray(plane.vao())
         glDrawElements(GL_TRIANGLES, plane.index_count(), GL_UNSIGNED_INT, ctypes.c_void_p(0))

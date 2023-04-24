@@ -13,6 +13,7 @@ uniform mat4 uModel = mat4(1.0);
 uniform mat4 uNormalModel = mat4(1.0);
 uniform mat4 uView = mat4(1.0);
 uniform mat4 uProjection = mat4(1.0);
+uniform mat4 uMVP = mat4(1.0);
 
 
 
@@ -25,7 +26,7 @@ void main()
     tsUV = osUV;
     
 
-    gl_Position = uProjection * uView * uModel * vec4(osPosition, 1.0);
+    gl_Position = uMVP * vec4(osPosition, 1.0);
 }
 
 

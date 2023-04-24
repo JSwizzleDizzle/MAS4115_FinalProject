@@ -99,7 +99,9 @@ class Transform:
 
 
     def calc_matrix(self):
-        self.__model_matrix = glm.translate(glm.rotate(glm.scale(self.scale), self.angle, self.axis), self.translation)
+        self.__model_matrix = glm.scale(glm.rotate(glm.translate(glm.mat4(1.0), self.translation), self.angle, self.axis), self.scale)
+        #glm.translate(glm.rotate(glm.scale(self.scale), self.angle, self.axis), self.translation)
+        
         self.__normal_model_matrix = glm.inverse(glm.transpose(self.__model_matrix))
 
 
