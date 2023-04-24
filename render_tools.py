@@ -167,6 +167,22 @@ class RenderData:
 
 
 
+class EulerAngles:
+    """
+    A simple data class containing Euler angle data.
+    Pitch is up/down tilt
+    Yaw is side-to-side rotation
+    Roll is rotation along the viewing axis
+    """
+    def __init__(self, pitch = 0, yaw = 0, roll = 0):
+        self.pitch = pitch
+        self.yaw = yaw
+        self.roll = roll
+
+
+
+
+
 class Camera:
     def __init__(self, fov = 45, aspect_ratio = 16 / 9, near_clip = 0.1, far_clip = 100):
         self.fov = fov
@@ -179,9 +195,7 @@ class Camera:
         self.right = glm.vec3(1, 0, 0)
         self.up = glm.vec3(0, 1, 0)
 
-        self.pitch = 0
-        self.yaw = glm.radians(-90)
-        self.roll = 0
+        self.angles = EulerAngles(0, glm.radians(-90), 0)
 
 
 

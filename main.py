@@ -48,8 +48,8 @@ if __name__ == "__main__":
     # Create and use shader program (see render_tools.py)
     program = rnd.ShaderProgram("vert.glsl", "frag.glsl")
     program.activate()
-    
-    
+
+
 
     # ---------------- RENDER LOOP ---------------- #
     # Runs continuously while the window is open
