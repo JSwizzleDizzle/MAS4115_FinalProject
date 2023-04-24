@@ -189,13 +189,21 @@ class Camera:
         self.aspect_ratio = aspect_ratio
         self.near_clip = near_clip
         self.far_clip = far_clip
+        self.perspective = glm.perspective(self.fov, self.aspect_ratio, self.near_clip, self.far_clip)
 
         self.pos = glm.vec3(0)
-        self.front = glm.vec3(0, 0, -1)
-        self.right = glm.vec3(1, 0, 0)
-        self.up = glm.vec3(0, 1, 0)
+        self.__front = glm.vec3(0, 0, -1)
+        self.__right = glm.vec3(1, 0, 0)
+        self.__up = glm.vec3(0, 1, 0)
 
-        self.angles = EulerAngles(0, glm.radians(-90), 0)
+        self.angles = EulerAngles()
+        self.view = glm.mat4()
+        
+
+    def calc_view(self):
+        self.__front = glm.normalize(glm.vec3(glm.sin(self.angles.yaw), glm.sin(self.angles.pitch), -glm.cos(self.angles.yaw)))
+        self.__up = glm.vec3(glm.sin(self.angles.roll) * self.__front.x, glm.cos(self.angles.roll), glm.sin(self.angles.roll) * self.__front.z)
+        self.view = glm.lookAt(self.pos, self.pos + self.__front, self.__up)
 
 
 
