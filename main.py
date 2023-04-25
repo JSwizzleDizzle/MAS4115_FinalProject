@@ -5,6 +5,7 @@ import numpy as np
 import glm
 from PIL import Image as img
 import render_tools as rnd
+import random
 
 
 
@@ -90,15 +91,12 @@ if __name__ == "__main__":
     # Creates object geometry and buffers
     obj = rnd.RenderData(rnd.GeometryData.cube())
 
-    # Matrices
-    transform = rnd.Transform(glm.vec3(0, 0, 0), glm.radians(0), glm.vec3(0, 0, 1), glm.vec3(0.5))
-
     # Create and use shader program (see render_tools.py)
     program = rnd.ShaderProgram("vert.glsl", "frag.glsl")
     program.activate()
 
     # Set up camera
-    camera.pos = glm.vec3(0, 0, 4)
+    camera.pos = glm.vec3(0, 8, 0)
 
     # Image
     image = img.open("textures/dirt.jpg")
@@ -130,10 +128,13 @@ if __name__ == "__main__":
     glCullFace(GL_BACK)
     glFrontFace(GL_CCW)
 
-    size = 20
+    size = 24
     transforms = []
+    glm.setSeed(int(random.random() * 2**31))
+    seed = glm.linearRand(glm.vec3(-256), glm.vec3(256))
     for i in range(size**2):
         translation = glm.vec3(i % size - (size / 2), 0, (i // size) - (size / 2))
+        translation.y = int(4 * glm.perlin(translation * 0.08 + seed))
         transforms.append(rnd.Transform(translation, glm.radians(0), glm.vec3(0, 0, 1), glm.vec3(0.5)))
 
 
