@@ -91,16 +91,11 @@ if __name__ == "__main__":
 
     # Matrices
     transform = rnd.Transform(glm.vec3(0, 0, -5), glm.radians(0), glm.vec3(0, 0, 1), glm.vec3(1))
-    view = glm.lookAt(glm.vec3(4, 4, 4), glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
-    projection = glm.perspective(45, WINDOW_WIDTH / WINDOW_HEIGHT, 0.1, 100)
-    mvp = projection * view * transform.model_matrix()
-    print(view)
 
     # Create and use shader program (see render_tools.py)
     program = rnd.ShaderProgram("vert.glsl", "frag.glsl")
     program.activate()
 
-    
     # Set up camera
     camera.pos = glm.vec3(0, 0, 4)
 
@@ -130,8 +125,8 @@ if __name__ == "__main__":
         
         program.setUniformMat4f("uModel", transform.model_matrix())
         program.setUniformMat4f("uNormalModel", transform.normal_model_matrix())
-        program.setUniformMat4f("uView", view)
-        program.setUniformMat4f("uProjection", projection)
+        program.setUniformMat4f("uView", camera.view)
+        program.setUniformMat4f("uProjection", camera.perspective)
         program.setUniformMat4f("uMVP", mvp)
 
         
