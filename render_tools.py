@@ -224,6 +224,8 @@ class Camera:
 
         self.sensitivity = 0.002
         self.speed = 0.05
+
+        self.active = False
         
 
     def calc_view(self):

@@ -26,6 +26,11 @@ def window_size_cbfun(window, width:int, height:int):
 
 
 def cursor_pos_cbfun(window, xpos:float, ypos:float):
+    if not camera.active:
+        camera.last_x = xpos
+        camera.last_y = ypos
+        camera.active = True
+
     camera.angles.yaw += (xpos - camera.last_x) * camera.sensitivity
     camera.angles.pitch += (camera.last_y - ypos) * camera.sensitivity
 
