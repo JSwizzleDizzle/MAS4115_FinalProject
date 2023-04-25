@@ -16,6 +16,7 @@ WINDOW_HEIGHT = 960
 
 # Camera
 camera = rnd.Camera(45, WINDOW_WIDTH / WINDOW_HEIGHT, 0.1, 100)
+fill = True
 
 
 def window_size_cbfun(window, width:int, height:int):
@@ -47,6 +48,10 @@ def key_press_cbfun(window, key:int, scancode:int, action:int, mods:int):
     if action == glfw.PRESS:
         if key == glfw.KEY_ESCAPE:
             glfw.set_window_should_close(window, True)
+        if key == glfw.KEY_Z:
+            global fill
+            fill = not fill
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL if fill else GL_LINE)
 
 
 def process_input():
@@ -63,6 +68,9 @@ def process_input():
     if glfw.get_key(window, glfw.KEY_LEFT_CONTROL) == glfw.PRESS:
         camera.pos -= camera.up * camera.speed
 
+
+def gen_chunk():
+    return np.array((16, 256, 16), dtype=np.int16)
 
 
 if __name__ == "__main__":
