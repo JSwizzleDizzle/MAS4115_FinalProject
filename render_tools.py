@@ -99,7 +99,7 @@ class Transform:
     - a 3D vector containing scaling components along each axis
     The transformation matrix is only recalculated when explicitly instructed to save computations
     """
-    def __init__(self, translation = glm.vec3(0, 0, 0), angle = 0, axis = glm.vec3(0, 1, 0), scale = glm.vec3(1, 1, 1)):
+    def __init__(self, translation = glm.vec3(0, 0, 0), angle:float = 0, axis = glm.vec3(0, 1, 0), scale = glm.vec3(1, 1, 1)):
         self.translation = translation
         self.angle = angle
         self.axis = axis

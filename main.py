@@ -144,14 +144,13 @@ if __name__ == "__main__":
         process_input()
         camera.calc_view()
 
-        
         #transform.angle = 2 * glfw.get_time()
         
         for trn in transforms:
             mvp = camera.perspective * camera.view * trn.model_matrix()
 
-            program.setUniformMat4f("uModel", transform.model_matrix())
-            program.setUniformMat4f("uNormalModel", transform.normal_model_matrix())
+            program.setUniformMat4f("uModel", trn.model_matrix())
+            program.setUniformMat4f("uNormalModel", trn.normal_model_matrix())
             program.setUniformMat4f("uView", camera.view)
             program.setUniformMat4f("uProjection", camera.perspective)
             program.setUniformMat4f("uMVP", mvp)
