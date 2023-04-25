@@ -104,7 +104,7 @@ if __name__ == "__main__":
     # ---------------- RENDER LOOP ---------------- #
     # Runs continuously while the window is open
     print("Program initialized successfully")
-    glClearColor(0.1, 0.1, 0.12, 1.0)
+    glClearColor(0.5294, 0.8078, 0.9216, 1.0)
     glEnable(GL_DEPTH_TEST)
     while not glfw.window_should_close(window):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)

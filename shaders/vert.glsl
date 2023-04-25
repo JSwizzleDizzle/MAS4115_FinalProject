@@ -21,7 +21,13 @@ uniform sampler2D diffuse;
 
 void main()
 {
-    fColor = vec4(0.5 * osPosition + 0.5, 1.0);   // abs(vec4(vec3(uMVP[3]), 1));
+    int face = gl_VertexID / 4;   // 0-5
+    float r = face % 3 == 0 ? 1.0 : 0.0;
+    float g = face % 3 == 1 ? 1.0 : 0.0;
+    float b = face % 3 == 2 ? 1.0 : 0.0;
+    fColor = vec4(r, g, b, 1.0);
+    // vec4(vec3(face / 6.0), 1.0);
+    //vec4(0.5 * osPosition + 0.5, 1.0);
 
     wsPosition = vec3(uModel * vec4(osPosition, 1.0));
     wsNormal = vec3(uNormalModel * vec4(osNormal, 0.0));
