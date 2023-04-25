@@ -78,6 +78,7 @@ if __name__ == "__main__":
         glfw.terminate()
         raise Exception("Window could not be created.")
 
+    # Configure window
     glfw.set_window_pos(window, 480, 270)
     glfw.set_window_size_callback(window, window_size_cbfun)
     glfw.set_cursor_pos_callback(window, cursor_pos_cbfun)
@@ -104,7 +105,7 @@ if __name__ == "__main__":
 
 
     
-    # ---------------- Terrain Generation ---------------- #
+    # ---------------- TERRAIN GENERATION ---------------- #
     size = 24
     transforms = []
     glm.setSeed(int(random.random() * 2**31))
