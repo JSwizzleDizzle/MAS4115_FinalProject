@@ -6,6 +6,10 @@ import glm
 
 
 class GeometryData:
+    """
+    A basic data class to group vertex and index data
+    Serves as a namespace for functions that generate primitive solids
+    """
     def __init__(self, verts, inds):
         self.verts = verts
         self.inds = inds
@@ -88,6 +92,13 @@ class GeometryData:
 
 
 class Transform:
+    """
+    Stores 3D transformation information based on:
+    - a 3D translation vector
+    - a 3D rotation axis and the angle about said axis
+    - a 3D vector containing scaling components along each axis
+    The transformation matrix is only recalculated when explicitly instructed to save computations
+    """
     def __init__(self, translation = glm.vec3(0, 0, 0), angle = 0, axis = glm.vec3(0, 1, 0), scale = glm.vec3(1, 1, 1)):
         self.translation = translation
         self.angle = angle
@@ -116,6 +127,10 @@ class Transform:
 
 
 class RenderData:
+    """
+    Manages the creation and storage of buffer objects (VAO, VBO, EBO)
+    Keeps track of vertex/index count for drawing
+    """
     def __init__(self, geometry: GeometryData, draw_type = GL_STATIC_DRAW):
         # Create object buffers
         self.__VAO = glGenVertexArrays(1)
@@ -174,7 +189,7 @@ class EulerAngles:
     Yaw is side-to-side rotation
     Roll is rotation along the viewing axis
     """
-    def __init__(self, pitch = 0, yaw = 0, roll = 0):
+    def __init__(self, pitch:float = 0, yaw:float = 0, roll:float = 0):
         self.pitch = pitch
         self.yaw = yaw
         self.roll = roll
@@ -184,7 +199,12 @@ class EulerAngles:
 
 
 class Camera:
-    def __init__(self, fov = 45, aspect_ratio = 16 / 9, near_clip = 0.1, far_clip = 100):
+    """
+    Represents a perspective camera in 3D space
+    Takes parameters for perspective projection (field-of-view, aspect ratio, clip bounds)
+    Starts at the origin facing the negative z axis
+    """
+    def __init__(self, fov:float = 45, aspect_ratio:float = 16 / 9, near_clip:float = 0.1, far_clip:float = 100):
         self.fov = fov
         self.aspect_ratio = aspect_ratio
         self.near_clip = near_clip
@@ -192,32 +212,43 @@ class Camera:
         self.perspective = glm.perspective(self.fov, self.aspect_ratio, self.near_clip, self.far_clip)
 
         self.pos = glm.vec3(0)
-        self.__front = glm.vec3(0, 0, -1)
-        self.__right = glm.vec3(1, 0, 0)
-        self.__up = glm.vec3(0, 1, 0)
+        self.front = glm.vec3(0, 0, -1)
+        self.right = glm.vec3(1, 0, 0)
+        self.up = glm.vec3(0, 1, 0)
 
         self.angles = EulerAngles()
-        self.view = glm.mat4()
+        self.view = glm.lookAt(self.pos, self.pos + self.front, self.up)
+
+        self.last_x = 0
+        self.last_y = 0
+
+        self.sensitivity = 0.002
+        self.speed = 0.05
         
 
     def calc_view(self):
-        self.__front = glm.normalize(glm.vec3(glm.sin(self.angles.yaw), glm.sin(self.angles.pitch), -glm.cos(self.angles.yaw)))
-        self.__up = glm.vec3(glm.sin(self.angles.roll) * self.__front.x, glm.cos(self.angles.roll), glm.sin(self.angles.roll) * self.__front.z)
-        self.view = glm.lookAt(self.pos, self.pos + self.__front, self.__up)
+        self.front = glm.vec3(glm.cos(self.angles.pitch) * glm.sin(self.angles.yaw), glm.sin(self.angles.pitch), glm.cos(self.angles.pitch) * -glm.cos(self.angles.yaw))
+        self.up = glm.vec3(0, 1, 0)   # glm.vec3(glm.sin(self.angles.roll) * self.__front.x, glm.cos(self.angles.roll), glm.sin(self.angles.roll) * self.__front.z)
+        self.right = glm.normalize(glm.cross(self.front, self.up))
+        self.view = glm.lookAt(self.pos, self.pos + self.front, self.up)
+
+    def calc_perspective(self):
+        self.perspective = glm.perspective(self.fov, self.aspect_ratio, self.near_clip, self.far_clip)
 
 
 
 
 
 class ShaderProgram:
+    """
+    Creates a GLSL shader program from vertex fragment shader source paths as arguments.
+    Encapsulates shader interactivity including program activation and passing of uniforms.
+    """
 
+    # Static member that contains the path to the shader locations
     directory = "shaders/"
 
     def __init__(self, vertex_path: str, fragment_path: str):
-        """
-        Creates a GLSL shader program from vertex fragment shader source paths as arguments.
-        """
-
         # Initialize shader components
         vertex_id = self.__initShader(vertex_path, GL_VERTEX_SHADER)
         fragment_id = self.__initShader(fragment_path, GL_FRAGMENT_SHADER)

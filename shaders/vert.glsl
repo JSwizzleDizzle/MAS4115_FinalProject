@@ -15,6 +15,8 @@ uniform mat4 uView = mat4(1.0);
 uniform mat4 uProjection = mat4(1.0);
 uniform mat4 uMVP = mat4(1.0);
 
+uniform sampler2D diffuse;
+
 
 
 void main()
