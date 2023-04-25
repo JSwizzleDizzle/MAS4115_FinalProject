@@ -321,6 +321,8 @@ class ShaderProgram:
         glUseProgram(0);
     
 
+    def setUniform3f(self, name: str, vec3):
+        glUniform3f(glGetUniformLocation(self.__id, name), vec3.x, vec3.y, vec3.z)
 
     def setUniformMat4f(self, name: str, mat4):
         glUniformMatrix4fv(glGetUniformLocation(self.__id, name), 1, GL_FALSE, np.array(mat4.to_list()))

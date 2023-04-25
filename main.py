@@ -103,12 +103,18 @@ if __name__ == "__main__":
     # Create and use shader program (see render_tools.py)
     program = rnd.ShaderProgram("vert.glsl", "frag.glsl")
     program.activate()
+    program.setUniform3f("uDirLight.data.ambient", glm.vec3(0.5))
+    program.setUniform3f("uDirLight.data.diffuse", glm.vec3(1.0))
+    program.setUniform3f("uDirLight.data.specular", glm.vec3(0.2))
+    program.setUniform3f("uDirLight.direction", glm.vec3(0.3, -1.0, 0.2))
+
+
 
     # Set up camera
     camera.pos = glm.vec3(0, 8, 0)
 
     # Texture
-    texture = rnd.Texture("dirt.jpg")
+    texture = rnd.Texture("stone.png")
     texture.activate()
 
 
@@ -140,6 +146,8 @@ if __name__ == "__main__":
         glfw.poll_events()
         process_input()
         camera.calc_view()
+
+        program.setUniform3f("uCameraPos", camera.pos)
 
         #transform.angle = 2 * glfw.get_time()
         
