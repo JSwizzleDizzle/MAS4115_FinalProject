@@ -3,7 +3,7 @@ import glfw
 from OpenGL.GL import *
 import numpy as np
 import glm
-from PIL import Image as img
+
 import render_tools as rnd
 import random
 
@@ -98,36 +98,13 @@ if __name__ == "__main__":
     # Set up camera
     camera.pos = glm.vec3(0, 8, 0)
 
-    # Image
-    image = img.open("textures/dirt.jpg")
-    image = image.transpose(img.FLIP_TOP_BOTTOM)
-    img_data = image.convert("RGBA").tobytes()
-
     # Texture
-    texture = glGenTextures(1)
-    glBindTexture(GL_TEXTURE_2D, texture)
-    # Wrapping mode
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
-    # Filter mode
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img_data)
-    glActiveTexture(GL_TEXTURE0)
+    texture = rnd.Texture("dirt.jpg")
+    texture.activate()
 
 
     
-    # ---------------- RENDER LOOP ---------------- #
-    # Runs continuously while the window is open
-    print("Program initialized successfully")
-    glClearColor(0.5294, 0.8078, 0.9216, 1.0)
-
-    glEnable(GL_DEPTH_TEST)
-    glEnable(GL_CULL_FACE)
-    glCullFace(GL_BACK)
-    glFrontFace(GL_CCW)
-
+    # ---------------- Terrain Generation ---------------- #
     size = 24
     transforms = []
     glm.setSeed(int(random.random() * 2**31))
@@ -138,6 +115,16 @@ if __name__ == "__main__":
         transforms.append(rnd.Transform(translation, glm.radians(0), glm.vec3(0, 0, 1), glm.vec3(0.5)))
 
 
+
+    # ---------------- RENDER LOOP ---------------- #
+    # Runs continuously while the window is open
+    print("Program initialized successfully")
+    glClearColor(0.5294, 0.8078, 0.9216, 1.0)
+
+    glEnable(GL_DEPTH_TEST)
+    glEnable(GL_CULL_FACE)
+    glCullFace(GL_BACK)
+    glFrontFace(GL_CCW)
     while not glfw.window_should_close(window):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 

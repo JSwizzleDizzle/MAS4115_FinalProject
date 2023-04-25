@@ -1,5 +1,6 @@
 # Import statements
 from OpenGL.GL import *
+from PIL import Image as img
 import numpy as np
 import glm
 
@@ -177,7 +178,46 @@ class RenderData:
     def index_count(self):
         return self.__index_count
     
-    
+
+
+
+
+class Texture():
+    """
+    Creates an OpenGL texture object from a file directory
+    """
+
+    # Static member that contains the path to the shader locations
+    directory = "textures/"
+
+    def __init__(self, path):
+        # Image
+        image = img.open(Texture.directory + path)
+        image = image.transpose(img.FLIP_TOP_BOTTOM)
+        self.__data = image.convert("RGBA").tobytes()
+
+        # Texture
+        self.__id = glGenTextures(1)
+        glBindTexture(GL_TEXTURE_2D, self.__id)
+        # Wrapping mode
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE)
+        # Filter mode
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, self.__data)
+        glBindTexture(GL_TEXTURE_2D, 0)
+
+
+    def activate(self):
+        glBindTexture(GL_TEXTURE_2D, self.__id)
+        glActiveTexture(GL_TEXTURE0)
+
+    def deactivate(self):
+        glBindTexture(GL_TEXTURE_2D, 0)
+
+
 
 
 
