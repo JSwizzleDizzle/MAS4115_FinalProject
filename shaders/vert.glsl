@@ -15,20 +15,21 @@ uniform mat4 uView = mat4(1.0);
 uniform mat4 uProjection = mat4(1.0);
 uniform mat4 uMVP = mat4(1.0);
 
-uniform sampler2D diffuse;
-
 
 
 void main()
 {
+    /*
     int face = gl_VertexID / 4;   // 0-5
     float r = face % 3 == 0 ? 1.0 : 0.0;
     float g = face % 3 == 1 ? 1.0 : 0.0;
     float b = face % 3 == 2 ? 1.0 : 0.0;
-    fColor = vec4(r, g, b, 1.0);
+    float p = face / 12.0;
+    fColor = vec4(1.0, 0.25 + p, 0.25 + 1.2 * p, 1.0);
     // vec4(vec3(face / 6.0), 1.0);
-    //vec4(0.5 * osPosition + 0.5, 1.0);
-
+    // vec4(0.5 * osPosition + 0.5, 1.0);
+    */
+    
     wsPosition = vec3(uModel * vec4(osPosition, 1.0));
     wsNormal = vec3(uNormalModel * vec4(osNormal, 0.0));
     tsUV = osUV;

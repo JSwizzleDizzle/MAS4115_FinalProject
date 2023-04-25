@@ -7,9 +7,11 @@ in vec4 fColor;
 
 out vec4 outColor;
 
+uniform sampler2D uDiffuse;
+
 void main()
 {
-    outColor = fColor;
+    outColor = texture(uDiffuse, tsUV);
 }
 
 

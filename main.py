@@ -3,6 +3,7 @@ import glfw
 from OpenGL.GL import *
 import numpy as np
 import glm
+from PIL import Image as img
 import render_tools as rnd
 
 
@@ -98,6 +99,24 @@ if __name__ == "__main__":
 
     # Set up camera
     camera.pos = glm.vec3(0, 0, 4)
+
+    # Image
+    image = img.open("textures/dirt.jpg")
+    image = image.transpose(img.FLIP_TOP_BOTTOM)
+    img_data = image.convert("RGBA").tobytes()
+
+    # Texture
+    texture = glGenTextures(1)
+    glBindTexture(GL_TEXTURE_2D, texture)
+    # Wrapping mode
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
+    # Filter mode
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, img_data)
+    
 
 
 
