@@ -91,7 +91,7 @@ if __name__ == "__main__":
     obj = rnd.RenderData(rnd.GeometryData.cube())
 
     # Matrices
-    transform = rnd.Transform(glm.vec3(0, 0, -5), glm.radians(0), glm.vec3(0, 0, 1), glm.vec3(1))
+    transform = rnd.Transform(glm.vec3(0, 0, 0), glm.radians(0), glm.vec3(0, 0, 1), glm.vec3(0.5))
 
     # Create and use shader program (see render_tools.py)
     program = rnd.ShaderProgram("vert.glsl", "frag.glsl")
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     camera.pos = glm.vec3(0, 0, 4)
 
     # Image
-    image = img.open("textures/stone.png")
+    image = img.open("textures/dirt.jpg")
     image = image.transpose(img.FLIP_TOP_BOTTOM)
     img_data = image.convert("RGBA").tobytes()
 
@@ -119,12 +119,24 @@ if __name__ == "__main__":
     glActiveTexture(GL_TEXTURE0)
 
 
-
+    
     # ---------------- RENDER LOOP ---------------- #
     # Runs continuously while the window is open
     print("Program initialized successfully")
     glClearColor(0.5294, 0.8078, 0.9216, 1.0)
+
     glEnable(GL_DEPTH_TEST)
+    glEnable(GL_CULL_FACE)
+    glCullFace(GL_BACK)
+    glFrontFace(GL_CCW)
+
+    size = 20
+    transforms = []
+    for i in range(size**2):
+        translation = glm.vec3(i % size - (size / 2), 0, (i // size) - (size / 2))
+        transforms.append(rnd.Transform(translation, glm.radians(0), glm.vec3(0, 0, 1), glm.vec3(0.5)))
+
+
     while not glfw.window_should_close(window):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
@@ -133,26 +145,20 @@ if __name__ == "__main__":
         camera.calc_view()
 
         
-
-        transform.angle = 2 * glfw.get_time()
-        transform.calc_matrix()
-        theta = 0.4 * glfw.get_time()
-        rad = 4
-
-        #view = glm.lookAt(glm.vec3(rad * glm.sin(theta), 0, rad * glm.cos(theta)), glm.vec3(0, 0, 0), glm.vec3(0, 1, 0))
-        mvp = camera.perspective * camera.view * transform.model_matrix()
+        #transform.angle = 2 * glfw.get_time()
         
-        program.setUniformMat4f("uModel", transform.model_matrix())
-        program.setUniformMat4f("uNormalModel", transform.normal_model_matrix())
-        program.setUniformMat4f("uView", camera.view)
-        program.setUniformMat4f("uProjection", camera.perspective)
-        program.setUniformMat4f("uMVP", mvp)
+        for trn in transforms:
+            mvp = camera.perspective * camera.view * trn.model_matrix()
 
-        
-        
+            program.setUniformMat4f("uModel", transform.model_matrix())
+            program.setUniformMat4f("uNormalModel", transform.normal_model_matrix())
+            program.setUniformMat4f("uView", camera.view)
+            program.setUniformMat4f("uProjection", camera.perspective)
+            program.setUniformMat4f("uMVP", mvp)
 
-        glBindVertexArray(obj.vao())
-        glDrawElements(GL_TRIANGLES, obj.index_count(), GL_UNSIGNED_INT, ctypes.c_void_p(0))
+            glBindVertexArray(obj.vao())
+            glDrawElements(GL_TRIANGLES, obj.index_count(), GL_UNSIGNED_INT, ctypes.c_void_p(0))
+            
         glBindVertexArray(0)
 
         glfw.swap_buffers(window)
