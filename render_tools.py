@@ -262,7 +262,7 @@ class Camera:
         self.last_y = 0
 
         self.sensitivity = 0.002
-        self.speed = 0.08
+        self.speed = 0.1
 
         self.active = False
         

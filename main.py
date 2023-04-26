@@ -55,6 +55,10 @@ def key_press_cbfun(window, key:int, scancode:int, action:int, mods:int):
 
 
 def process_input():
+    speed = camera.speed
+    if glfw.get_key(window, glfw.KEY_LEFT_SHIFT) == glfw.PRESS:
+        camera.speed *= 1.5
+    
     if glfw.get_key(window, glfw.KEY_W) == glfw.PRESS:
         camera.pos += glm.normalize(glm.vec3(camera.front.x, 0, camera.front.z)) * camera.speed
     if glfw.get_key(window, glfw.KEY_S) == glfw.PRESS:
@@ -68,9 +72,13 @@ def process_input():
     if glfw.get_key(window, glfw.KEY_LEFT_CONTROL) == glfw.PRESS:
         camera.pos -= camera.up * camera.speed
 
+    camera.speed = speed
+    
+
 
 def gen_chunk():
     return np.array((16, 256, 16), dtype=np.int16)
+
 
 
 if __name__ == "__main__":
