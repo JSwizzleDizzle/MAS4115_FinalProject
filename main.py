@@ -19,6 +19,8 @@ camera = rnd.Camera(45, WINDOW_WIDTH / WINDOW_HEIGHT, 0.1, 100)
 fill = True
 
 
+
+# ---------------- CALLBACK FUNCTION SETUP ---------------- #
 # Callback function for window resizing
 def window_size_cbfun(window, width:int, height:int):
     WINDOW_WIDTH = width
@@ -26,7 +28,6 @@ def window_size_cbfun(window, width:int, height:int):
     camera.aspect_ratio = width / height
     camera.calc_perspective()
     glViewport(0, 0, width, height)
-
 
 
 # Callback function for mouse movement
@@ -47,7 +48,6 @@ def cursor_pos_cbfun(window, xpos:float, ypos:float):
     camera.last_y = ypos
 
 
-
 # Callback function for keyboard input
 def key_press_cbfun(window, key:int, scancode:int, action:int, mods:int):
     if action == glfw.PRESS:
@@ -57,7 +57,6 @@ def key_press_cbfun(window, key:int, scancode:int, action:int, mods:int):
             global fill
             fill = not fill
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL if fill else GL_LINE)
-
 
 
 # Camera input function 
@@ -107,6 +106,13 @@ if __name__ == "__main__":
     glfw.set_key_callback(window, key_press_cbfun)
     glfw.make_context_current(window)
     glfw.set_input_mode(window, glfw.CURSOR, glfw.CURSOR_DISABLED)
+
+    # Set GL context variables
+    glClearColor(0.5294, 0.8078, 0.9216, 1.0)
+    glEnable(GL_DEPTH_TEST)
+    glEnable(GL_CULL_FACE)
+    glCullFace(GL_BACK)
+    glFrontFace(GL_CCW)
     
     
 
@@ -117,16 +123,14 @@ if __name__ == "__main__":
     # Create and use shader program (see render_tools.py)
     program = rnd.ShaderProgram("vert.glsl", "frag.glsl")
     program.activate()
+    # Set sunlight parameters
     program.setUniform3f("uDirLight.data.ambient", glm.vec3(0.5))
     program.setUniform3f("uDirLight.data.diffuse", glm.vec3(0.85))
     program.setUniform3f("uDirLight.data.specular", glm.vec3(0.15))
     program.setUniform3f("uDirLight.direction", glm.vec3(0.3, -1.0, 0.2))
 
-
-
     # Set up camera
     camera.pos = glm.vec3(0, 8, 6)
-    camera.pitch = glm.radians(-45)
 
     # Texture
     texture = rnd.Texture("stone.png")
@@ -135,6 +139,7 @@ if __name__ == "__main__":
 
     
     # ---------------- TERRAIN GENERATION ---------------- #
+    # Generates an nxn square of blocks with heights randomly generated via perlin noise
     size = 24
     transforms = []
     glm.setSeed(int(random.random() * 2**31))
@@ -142,42 +147,34 @@ if __name__ == "__main__":
     for i in range(size**2):
         translation = glm.vec3(i % size - (size / 2), 0, (i // size) - (size / 2))
         translation.y = int(4 * glm.perlin(translation * 0.08 + seed))
-        transforms.append(rnd.Transform(translation, glm.radians(0), glm.vec3(0, 0, 1), glm.vec3(0.5)))
+        transforms.append(rnd.Transform(translation, glm.radians(0), glm.vec3(0, 1, 0), glm.vec3(0.5)))
 
 
 
     # ---------------- RENDER LOOP ---------------- #
     # Runs continuously while the window is open
     print("Program initialized successfully")
-    glClearColor(0.5294, 0.8078, 0.9216, 1.0)
-
-    glEnable(GL_DEPTH_TEST)
-    glEnable(GL_CULL_FACE)
-    glCullFace(GL_BACK)
-    glFrontFace(GL_CCW)
     while not glfw.window_should_close(window):
+        # Clear previous frame info
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
+        # Take user input
         glfw.poll_events()
         process_input()
+
+        # Update camera variables
         camera.calc_view()
-
+        program.setUniformMat4f("uView", camera.view)
+        program.setUniformMat4f("uProjection", camera.perspective)
         program.setUniform3f("uCameraPos", camera.pos)
-
-        #transform.angle = 2 * glfw.get_time()
         
+        # Draw all blocks
         for trn in transforms:
-            mvp = camera.perspective * camera.view * trn.model_matrix()
-
             program.setUniformMat4f("uModel", trn.model_matrix())
             program.setUniformMat4f("uNormalModel", trn.normal_model_matrix())
-            program.setUniformMat4f("uView", camera.view)
-            program.setUniformMat4f("uProjection", camera.perspective)
-            program.setUniformMat4f("uMVP", mvp)
-
+            
             glBindVertexArray(obj.vao())
             glDrawElements(GL_TRIANGLES, obj.index_count(), GL_UNSIGNED_INT, ctypes.c_void_p(0))
-            
         glBindVertexArray(0)
 
         glfw.swap_buffers(window)

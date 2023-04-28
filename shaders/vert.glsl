@@ -1,41 +1,37 @@
+// GLSL version
 # version 330 core
 
+// Stored vertex attributes
 layout(location = 0) in vec3 osPosition;
 layout(location = 1) in vec3 osNormal;
 layout(location = 2) in vec2 osUV;
 
+// Outputs to the fragment hsder
 out vec3 wsPosition;
 out vec3 wsNormal;
 out vec2 tsUV;
 out vec4 fColor;
 
+// Input transformation matrices
 uniform mat4 uModel = mat4(1.0);
 uniform mat4 uNormalModel = mat4(1.0);
 uniform mat4 uView = mat4(1.0);
 uniform mat4 uProjection = mat4(1.0);
-uniform mat4 uMVP = mat4(1.0);
 
 
 
 void main()
 {
-    /*
-    int face = gl_VertexID / 4;   // 0-5
-    float r = face % 3 == 0 ? 1.0 : 0.0;
-    float g = face % 3 == 1 ? 1.0 : 0.0;
-    float b = face % 3 == 2 ? 1.0 : 0.0;
-    float p = face / 12.0;
-    fColor = vec4(1.0, 0.25 + p, 0.25 + 1.2 * p, 1.0);
-    // vec4(vec3(face / 6.0), 1.0);
-    // vec4(0.5 * osPosition + 0.5, 1.0);
-    */
-    
-    wsPosition = vec3(uModel * vec4(osPosition, 1.0));
-    wsNormal = vec3(uNormalModel * vec4(osNormal, 0.0));
-    tsUV = osUV;
-    
+    // Calculate position transformations
+    vec4 ws4Position = uModel * vec4(osPosition, 1.0);
+    gl_Position = uProjection * uView * ws4Position;
+    wsPosition = vec3(ws4Position);
 
-    gl_Position = uMVP * vec4(osPosition, 1.0);
+    // Transform surface normals to world space
+    wsNormal = vec3(uNormalModel * vec4(osNormal, 0.0));
+
+    // Keep UVs
+    tsUV = osUV;
 }
 
 
