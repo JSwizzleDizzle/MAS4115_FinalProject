@@ -138,7 +138,7 @@ if __name__ == "__main__":
 
     
     # ---------------- TERRAIN GENERATION ---------------- #
-    # Generates an nxn square of blocks with heights randomly generated via perlin noise
+    # Generates an nxn square of blocks with y-coordinates randomly generated via perlin noise
     size = 24
     transforms = []
     glm.setSeed(int(random.random() * 2**31))
