@@ -196,7 +196,7 @@ class Texture():
         image = image.transpose(img.FLIP_TOP_BOTTOM)
         self.__data = image.convert("RGBA").tobytes()
 
-        # Texture
+        # Create texture
         self.__id = glGenTextures(1)
         glBindTexture(GL_TEXTURE_2D, self.__id)
         # Wrapping mode
@@ -205,8 +205,9 @@ class Texture():
         # Filter mode
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-
+        # Load in texture data
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width, image.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, self.__data)
+        # Unbind texture
         glBindTexture(GL_TEXTURE_2D, 0)
 
 

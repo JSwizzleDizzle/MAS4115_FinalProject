@@ -1,13 +1,9 @@
 # Import statements
 import glfw
 from OpenGL.GL import *
-import numpy as np
 import glm
-
 import render_tools as rnd
 import random
-
-
 
 
 # Constants
@@ -30,6 +26,7 @@ def window_size_cbfun(window, width:int, height:int):
     glViewport(0, 0, width, height)
 
 
+
 # Callback function for mouse movement
 def cursor_pos_cbfun(window, xpos:float, ypos:float):
     # Check for mouse entering the window
@@ -48,6 +45,7 @@ def cursor_pos_cbfun(window, xpos:float, ypos:float):
     camera.last_y = ypos
 
 
+
 # Callback function for keyboard input
 def key_press_cbfun(window, key:int, scancode:int, action:int, mods:int):
     if action == glfw.PRESS:
@@ -57,6 +55,7 @@ def key_press_cbfun(window, key:int, scancode:int, action:int, mods:int):
             global fill
             fill = not fill
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL if fill else GL_LINE)
+
 
 
 # Camera input function 
