@@ -111,7 +111,6 @@ class Transform:
 
 
     def calc_matrix(self):
-        #glm.translate(glm.rotate(glm.scale(self.scale), self.angle, self.axis), self.translation)
         self.__model_matrix = glm.scale(glm.rotate(glm.translate(glm.mat4(1.0), self.translation), self.angle, self.axis), self.scale)
         self.__normal_model_matrix = glm.inverse(glm.transpose(self.__model_matrix))
 
@@ -191,7 +190,7 @@ class Texture():
     directory = "textures/"
 
     def __init__(self, path):
-        # Image
+        # Load and process image
         image = img.open(Texture.directory + path)
         image = image.transpose(img.FLIP_TOP_BOTTOM)
         self.__data = image.convert("RGBA").tobytes()
