@@ -19,6 +19,7 @@ camera = rnd.Camera(45, WINDOW_WIDTH / WINDOW_HEIGHT, 0.1, 100)
 fill = True
 
 
+# Callback function for window resizing
 def window_size_cbfun(window, width:int, height:int):
     WINDOW_WIDTH = width
     WINDOW_HEIGHT = height
@@ -28,22 +29,26 @@ def window_size_cbfun(window, width:int, height:int):
 
 
 
+# Callback function for mouse movement
 def cursor_pos_cbfun(window, xpos:float, ypos:float):
+    # Check for mouse entering the window
     if not camera.active:
         camera.last_x = xpos
         camera.last_y = ypos
         camera.active = True
 
+    # Calculate camera angle movement
     camera.angles.yaw += (xpos - camera.last_x) * camera.sensitivity
     camera.angles.pitch += (camera.last_y - ypos) * camera.sensitivity
+    camera.angles.pitch = max(glm.radians(-89.5), min(camera.angles.pitch, glm.radians(89.5)))
 
-    camera.angles.pitch = max(glm.radians(-89.9), min(camera.angles.pitch, glm.radians(89.9)))
-
+    # Keep track of previous position
     camera.last_x = xpos
     camera.last_y = ypos
 
 
 
+# Callback function for keyboard input
 def key_press_cbfun(window, key:int, scancode:int, action:int, mods:int):
     if action == glfw.PRESS:
         if key == glfw.KEY_ESCAPE:
@@ -54,30 +59,31 @@ def key_press_cbfun(window, key:int, scancode:int, action:int, mods:int):
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL if fill else GL_LINE)
 
 
+
+# Camera input function 
 def process_input():
     speed = camera.speed
     if glfw.get_key(window, glfw.KEY_LEFT_SHIFT) == glfw.PRESS:
-        camera.speed *= 1.5
+        speed *= 1.5
     
+    move_direction = glm.vec3(0, 0, 0)
     if glfw.get_key(window, glfw.KEY_W) == glfw.PRESS:
-        camera.pos += glm.normalize(glm.vec3(camera.front.x, 0, camera.front.z)) * camera.speed
+        move_direction += glm.normalize(glm.vec3(camera.front.x, 0, camera.front.z))
     if glfw.get_key(window, glfw.KEY_S) == glfw.PRESS:
-        camera.pos -= glm.normalize(glm.vec3(camera.front.x, 0, camera.front.z)) * camera.speed
+        move_direction -= glm.normalize(glm.vec3(camera.front.x, 0, camera.front.z))
     if glfw.get_key(window, glfw.KEY_D) == glfw.PRESS:
-        camera.pos += camera.right * camera.speed
+        move_direction += camera.right
     if glfw.get_key(window, glfw.KEY_A) == glfw.PRESS:
-        camera.pos -= camera.right * camera.speed
+        move_direction -= camera.right
     if glfw.get_key(window, glfw.KEY_SPACE) == glfw.PRESS:
-        camera.pos += camera.up * camera.speed
+        move_direction += camera.up
     if glfw.get_key(window, glfw.KEY_LEFT_CONTROL) == glfw.PRESS:
-        camera.pos -= camera.up * camera.speed
+        move_direction -= camera.up
 
-    camera.speed = speed
-    
+    if move_direction != glm.vec3(0, 0, 0):
+        camera.pos += glm.normalize(move_direction) * speed
 
 
-def gen_chunk():
-    return np.array((16, 256, 16), dtype=np.int16)
 
 
 
@@ -112,14 +118,15 @@ if __name__ == "__main__":
     program = rnd.ShaderProgram("vert.glsl", "frag.glsl")
     program.activate()
     program.setUniform3f("uDirLight.data.ambient", glm.vec3(0.5))
-    program.setUniform3f("uDirLight.data.diffuse", glm.vec3(1.0))
-    program.setUniform3f("uDirLight.data.specular", glm.vec3(0.2))
+    program.setUniform3f("uDirLight.data.diffuse", glm.vec3(0.85))
+    program.setUniform3f("uDirLight.data.specular", glm.vec3(0.15))
     program.setUniform3f("uDirLight.direction", glm.vec3(0.3, -1.0, 0.2))
 
 
 
     # Set up camera
-    camera.pos = glm.vec3(0, 8, 0)
+    camera.pos = glm.vec3(0, 8, 6)
+    camera.pitch = glm.radians(-45)
 
     # Texture
     texture = rnd.Texture("stone.png")
