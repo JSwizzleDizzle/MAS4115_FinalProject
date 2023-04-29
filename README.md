@@ -10,11 +10,11 @@ After installing Python, go into the Windows taskbar and search "Edit the system
 
 ## Package installation
 Then open the command prompt as an administrator and run the following:  
-pip install glfw
-pip install PyOpenGL
-pip install numpy
-pip install PyGLM
-pip install Pillow
+> pip install glfw  
+> pip install PyOpenGL  
+> pip install numpy  
+> pip install PyGLM  
+> pip install Pillow  
 
 
 ## Running the code
@@ -29,9 +29,4 @@ The documentation for the necessary packages is here:
 * PyGLM: https://pypi.org/project/PyGLM/  
 * Pillow: https://pypi.org/project/Pillow/  
 * Numpy: https://pypi.org/project/numpy/  
-
-
-## CoLab Link
-The link to the CoLab document is here: https://colab.research.google.com/drive/1zcWlH0hxunV8iMC-8oMZG9CPaJMm-cIu?usp=sharing  
-
 

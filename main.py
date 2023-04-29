@@ -93,7 +93,7 @@ if __name__ == "__main__":
         raise Exception("GLFW could not initialize.")
 
     # Create, verify, and configure window instance
-    window = glfw.create_window(WINDOW_WIDTH, WINDOW_HEIGHT, "Test window", None, None)
+    window = glfw.create_window(WINDOW_WIDTH, WINDOW_HEIGHT, "Super Blocky Craft Game 3D Supreme", None, None)
     if not window:
         glfw.terminate()
         raise Exception("Window could not be created.")
