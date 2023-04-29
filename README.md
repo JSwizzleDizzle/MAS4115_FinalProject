@@ -4,8 +4,8 @@
 The project has been configured to run from local Python files, using the given directory layout. If python is not locally installed on your computer, you can download and install it from here: https://www.anaconda.com/  
 
 After installing Python, go into the Windows taskbar and search "Edit the system environment variables". Click on the "Environment Variables..." button. Then click on the Path row under System variables and click the Edit button. Add the following directories:  
-* C:\ProgramData\anaconda3
-* C:\ProgramData\anaconda3\Scripts
+> C:\ProgramData\anaconda3  
+> C:\ProgramData\anaconda3\Scripts  
 
 
 ## Package installation
@@ -16,17 +16,22 @@ pip install numpy
 pip install PyGLM
 pip install Pillow
 
-From there the Python scripts should be able to run properly.  
+
+## Running the code
+Visual Studio Code is a good editor to use for running Python and can be downloaded here: https://code.visualstudio.com/  
+Once installing, open whatever directory the project is saved to in VS Code and select the conda interpreter at the bottom right of the screen. From there, if conda is selected and the packages have been properly installed, the Python scripts should be able to run properly.  
 
 
 ## Package Documentation
 The documentation for the necessary packages is here:  
-* https://pypi.org/project/PyOpenGL/  
-* https://pypi.org/project/glfw/  
-* https://pypi.org/project/numpy/  
-* https://pypi.org/project/PyGLM/  
-* https://pypi.org/project/Pillow/  
+* PyOpenGL: https://pypi.org/project/PyOpenGL/  
+* GLFW: https://pypi.org/project/glfw/  
+* PyGLM: https://pypi.org/project/PyGLM/  
+* Pillow: https://pypi.org/project/Pillow/  
+* Numpy: https://pypi.org/project/numpy/  
 
 
 ## CoLab Link
 The link to the CoLab document is here: https://colab.research.google.com/drive/1zcWlH0hxunV8iMC-8oMZG9CPaJMm-cIu?usp=sharing  
+
+
