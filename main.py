@@ -138,15 +138,20 @@ if __name__ == "__main__":
 
     
     # ---------------- TERRAIN GENERATION ---------------- #
+    # Parameters which affect block transforms (these can be tweaked for interesting effects)
+    angle = 0
+    axis = glm.vec3(0, 1, 0)
+    scale = glm.vec3(0.5, 0.5, 0.5)
+
     # Generates an nxn square of blocks with y-coordinates randomly generated via perlin noise
-    size = 24
+    n = 24
     transforms = []
     glm.setSeed(int(random.random() * 2**31))
     seed = glm.linearRand(glm.vec3(-256), glm.vec3(256))
-    for i in range(size**2):
-        translation = glm.vec3(i % size - (size / 2), 0, (i // size) - (size / 2))
+    for i in range(n**2):
+        translation = glm.vec3(i % n - (n / 2), 0, (i // n) - (n / 2))
         translation.y = int(4 * glm.perlin(translation * 0.08 + seed))
-        transforms.append(rnd.Transform(translation, glm.radians(0), glm.vec3(0, 1, 0), glm.vec3(0.5)))
+        transforms.append(rnd.Transform(translation, angle, axis, scale))
 
 
 
